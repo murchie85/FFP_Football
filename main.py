@@ -61,15 +61,16 @@ user_input            = userInputObject("","",(0.27,0.65,0.45,0.08), gui)
 modifyInput           = manageInput()
 
 
-
 # -----------game objects
 
-footballSpriteList     = [pygame.image.load('sprites/football/football1.png'),pygame.image.load('sprites/football/football2.png'),pygame.image.load('sprites/football/football3.png'),pygame.image.load('sprites/football/football4.png')]
+footballSpriteList     = importFiles('foo',3,tDir='sprites/football/')
 footballSprite         = sprite(footballSpriteList,gui.width/2,gui.height/2)
 fitba                  = fitbaObject(footballSprite)
 
-playerSLUP           = [pygame.image.load('sprites/players/up1.png'),pygame.image.load('sprites/players/up2.png'),pygame.image.load('sprites/players/up3.png'),pygame.image.load('sprites/players/up4.png'),pygame.image.load('sprites/players/up5.png') ]
-playerSprite         = playerSprite(playerSLUP)
+playerSSW            = importFiles('ssW',3,tDir='sprites/players/ssw/')
+tDir='sprites/players/ssw/'
+playerSSW            = [pygame.image.load(tDir+'ssW1.png'),pygame.image.load(tDir+'ssW2.png'),pygame.image.load(tDir+'ssW3.png'),pygame.image.load(tDir+'ssW4.png'),pygame.image.load(tDir+'ssW5.png'),pygame.image.load(tDir+'ssW6.png'),pygame.image.load(tDir+'ssW7.png'),pygame.image.load(tDir+'ssW8.png'),pygame.image.load(tDir+'ssW9.png'),pygame.image.load(tDir+'ssW10.png'),pygame.image.load(tDir+'ssW11.png'),pygame.image.load(tDir+'ssW12.png')]
+playerSprite         = playerSprite(playerSSW)
 player               = playerObject(playerSprite,gui.width/2,gui.height/3,2.5,1.8)
 
 
@@ -88,23 +89,25 @@ while gui.running:
     screen.fill((10, 100, 10))
     gui.clicked = False
     # Reset the key each round
-    #user_input.returnedKey=''
+    user_input.returnedKey=''
 
     # Did the user click the window close button?
     for event in pygame.event.get():
         pos            = pygame.mouse.get_pos()
         if event.type == pygame.QUIT: gui.running = False
         if event.type == pygame.MOUSEBUTTONDOWN: gui.clicked  = True
-        user_input     = modifyInput.manageButtons(event,user_input)
+        user_input     = modifyInput.manageButtons(event,user_input,gui)
 
     # Update GUI with dynamic vars
     gui.userInput  = user_input
     gui.mx, gui.my = pygame.mouse.get_pos()
 
 
-    fitba.sprite.animate(gui)
+    fitba.updateSprite(gui)
 
-    player.play_selected(gui)
+    player.play_selected(gui,fitba)
+
+    if(user_input.kick): print('Ball kicked')
 
 
         

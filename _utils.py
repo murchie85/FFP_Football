@@ -1,3 +1,6 @@
+import os
+import pygame
+
 class sprite():
     def __init__(self,imageFrames,x,y):
         self.imageFrames = imageFrames
@@ -38,3 +41,11 @@ def drawImage(screen,image,pos,trim=False):
         screen.blit(image,pos,trim)
     else:
         screen.blit(image,pos)
+
+def importFiles(sName,numLetters=3,tDir  = 'sprites/players/'):
+    tDir = tDir
+    spriteList = [x for x in os.listdir(tDir) if x[:numLetters] == sName]
+    spriteList = [pygame.image.load(tDir + x) for x in spriteList]
+
+
+    return(spriteList)

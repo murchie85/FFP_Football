@@ -14,14 +14,34 @@ class manageInput():
         self.shift = shift
     def help():
         print('Pass user_input class into this, to include shift modifier')
-    def manageButtons(self,event,user_input):
+    def manageButtons(self,event,user_input,gui):
         
-        
+        # -------------return entered key
         if event.type == pygame.KEYDOWN: user_input.returnedKey = str(pygame.key.name(event.key))
+        
+
+        #---------------INGAME
+
         user_input.up    = pygame.key.get_pressed()[pygame.K_UP]
         user_input.down  = pygame.key.get_pressed()[pygame.K_DOWN]
         user_input.left  = pygame.key.get_pressed()[pygame.K_LEFT]
         user_input.right = pygame.key.get_pressed()[pygame.K_RIGHT]
+        
+        if(gui.gameState=='ingame'):
+            user_input.kick = False
+            if(user_input.returnedKey.upper()=='H'): user_input.kick  = True
+
+            if(pygame.key.get_pressed()[pygame.K_w]): user_input.up    =True
+            if(pygame.key.get_pressed()[pygame.K_s]): user_input.down  =True
+            if(pygame.key.get_pressed()[pygame.K_a]): user_input.left  =True
+            if(pygame.key.get_pressed()[pygame.K_d]): user_input.right =True
+
+
+
+
+
+
+        #---------------END INGAME
         
 
         if (event.type == pygame.KEYDOWN):
@@ -84,6 +104,7 @@ class userInputObject():
         self.down          = False
         self.left          = False
         self.right         = False
+        self.kick          = False
 
         
 

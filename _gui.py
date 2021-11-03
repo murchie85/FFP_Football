@@ -6,7 +6,7 @@ class gui():
         self.font         = font
 
 
-
+        self.gameState    = 'ingame'
         self.userInput    = None # Loaded at runtime
         self.running      = True
         self.dt           = 0
@@ -27,3 +27,11 @@ class fitbaObject():
     """
     def __init__(self,football):
         self.sprite = football
+        self.x      = self.sprite.x
+        self.y      = self.sprite.y
+        self.w      = self.sprite.w
+        self.h      = self.sprite.h
+    
+    def updateSprite(self,gui):
+        self.sprite.x,self.sprite.y = self.x,self.y
+        self.sprite.animate(gui)
