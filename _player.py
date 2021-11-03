@@ -9,8 +9,40 @@ class playerSprite():
         self.y           = 0
         self.w           = self.imageFrames[0].get_rect().w
         self.h           = self.imageFrames[0].get_rect().h
-        self.direction   = None
         self.frameTime   = 0
+
+
+        self.u           = False
+        self.d           = False
+        self.l           = False
+        self.r           = False
+
+        self.currentDirection   = None
+
+
+    
+
+    def getDirection(self,gui):
+
+        direction = None
+
+        # reset
+        self.u,self.d,self.l,self.r = False,False,False,False
+        
+        if(gui.userInput.up):    self.u = True
+        if(gui.userInput.down):  self.d = True
+        if(gui.userInput.left):  self.l = True
+        if(gui.userInput.right): self.r = True
+
+        if(self.u): direction = 'up'
+        if(self.d): direction = 'down'
+        if(self.l): direction = 'left'
+        if(self.r): direction = 'right'
+
+        return(direction)
+
+
+
 
     def animate(self,gui,interval=0.2,stop=False):
         """
@@ -19,11 +51,20 @@ class playerSprite():
         """
 
         # Update direction Frames
+        direction = self.getDirection(gui)
+
+        if(self.currentDirection!=direction):
+            print('updateDirection')
+            self.currentDirection = direction
+
+        
 
         if(stop):
             gui.screen.blit(self.imageFrames[0],(self.x,self.y))
             return()
         
+
+        #-----------animate
         # incremented timer
         self.frameTime += gui.dt/1000
         
@@ -63,7 +104,7 @@ class playerObject():
         if(gui.userInput.left):  self.x -= self.vx
         if(gui.userInput.right): self.x += self.vx
 
-        if(gui.userInput.up):    self.sprite.animate(gui)
+        self.sprite.animate(gui)
         #if(gui.userInput.down):  self.y += self.vy
         #if(gui.userInput.left):  self.x -= self.vx
         #if(gui.userInput.right): self.x += self.vx
