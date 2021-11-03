@@ -1,4 +1,4 @@
-class sprite():
+class playerSprite():
     def __init__(self,imageFrames,x,y):
         self.imageFrames = imageFrames
         self.numFrames   = len(self.imageFrames)
@@ -31,10 +31,3 @@ class sprite():
         
         gui.screen.blit(self.imageFrames[self.framePos],(self.x,self.y))
 
-
-
-def drawImage(screen,image,pos,trim=False):
-    if(trim!=False):
-        screen.blit(image,pos,trim)
-    else:
-        screen.blit(image,pos)

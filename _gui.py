@@ -7,6 +7,7 @@ class gui():
 
 
 
+        self.userInput    = None # Loaded at runtime
         self.running      = True
         self.dt           = 0
         self.gameElapsed  = 0
@@ -37,4 +38,5 @@ class playerObject():
 
 
     def play_selected(self,gui):
+        if(user_input.returnedKey==''):
         self.sprite.animate(gui)

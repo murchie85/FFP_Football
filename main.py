@@ -55,9 +55,9 @@ font        = pygame.font.Font('fonts/nokiafc22.ttf', 32)
 
 
 # ---------------CLASS OBJECTS
-user_input            = userInputObject("","",(0.27,0.65,0.45,0.08), gui)
 gui                   = gui(screen,width,height,font)
-modifyInput  = manageInput()
+user_input            = userInputObject("","",(0.27,0.65,0.45,0.08), gui)
+modifyInput           = manageInput()
 
 
 
@@ -96,8 +96,8 @@ while gui.running:
         if event.type == pygame.MOUSEBUTTONDOWN: gui.clicked  = True
         user_input     = modifyInput.manageButtons(event,user_input)
 
-    
-
+    # Update GUI with dynamic vars
+    gui.userInput  = user_input
     gui.mx, gui.my = pygame.mouse.get_pos()
 
 
