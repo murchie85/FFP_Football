@@ -27,16 +27,3 @@ class fitbaObject():
     """
     def __init__(self,football):
         self.sprite = football
-
-
-class playerObject():
-    """
-    takes in playersprite classs from utils
-    """
-    def __init__(self,playerSprite):
-        self.sprite = playerSprite
-
-
-    def play_selected(self,gui):
-        if(user_input.returnedKey==''):
-        self.sprite.animate(gui)

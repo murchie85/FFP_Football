@@ -12,6 +12,7 @@ from _gui                   import *
 from _gameState             import *
 from _input                 import *
 from _utils                 import *
+from _player                import *
 
 
 #----------------------------------------
@@ -68,8 +69,8 @@ footballSprite         = sprite(footballSpriteList,gui.width/2,gui.height/2)
 fitba                  = fitbaObject(footballSprite)
 
 playerSLUP           = [pygame.image.load('sprites/players/up1.png'),pygame.image.load('sprites/players/up2.png'),pygame.image.load('sprites/players/up3.png'),pygame.image.load('sprites/players/up4.png'),pygame.image.load('sprites/players/up5.png') ]
-playerSprite         = playerSprite(playerSLUP,gui.width/2,gui.height/3)
-player               = playerObject(playerSprite)
+playerSprite         = playerSprite(playerSLUP)
+player               = playerObject(playerSprite,gui.width/2,gui.height/3,2.5,1.8)
 
 
 
@@ -87,7 +88,7 @@ while gui.running:
     screen.fill((10, 100, 10))
     gui.clicked = False
     # Reset the key each round
-    user_input.returnedKey=''
+    #user_input.returnedKey=''
 
     # Did the user click the window close button?
     for event in pygame.event.get():

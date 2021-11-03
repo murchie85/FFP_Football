@@ -18,6 +18,10 @@ class manageInput():
         
         
         if event.type == pygame.KEYDOWN: user_input.returnedKey = str(pygame.key.name(event.key))
+        user_input.up    = pygame.key.get_pressed()[pygame.K_UP]
+        user_input.down  = pygame.key.get_pressed()[pygame.K_DOWN]
+        user_input.left  = pygame.key.get_pressed()[pygame.K_LEFT]
+        user_input.right = pygame.key.get_pressed()[pygame.K_RIGHT]
         
 
         if (event.type == pygame.KEYDOWN):
@@ -75,6 +79,15 @@ class manageInput():
 class userInputObject():
     def __init__(self,returnedKey,enteredString,boxDims, gui,directionBtn=None,  inputLimit = 30):
         self.returnedKey   = returnedKey
+        self.pressedKey    = None
+        self.up            = False
+        self.down          = False
+        self.left          = False
+        self.right         = False
+
+        
+
+
         self.enteredString = enteredString
         self.boxDims       = boxDims
         self.gui           = gui
@@ -84,6 +97,12 @@ class userInputObject():
     def help():
         print('This object holds a current returned key and builds up an entered string. It also can draw text with blink at end value and draw a box.')
 
+
+
+
+
+
+    # -------------------------Text input
     def processInput(self):
 
         # Clear out lingering direction Button
