@@ -33,28 +33,19 @@ class playerSprite():
 
     
 
-    def getDirection(self,gui):
+    def getDirection(self,ang):
 
         direction = None
-
-        # reset
-        self.u,self.d,self.l,self.r = False,False,False,False
-        
-        if(gui.userInput.up):    self.u = True
-        if(gui.userInput.down):  self.d = True
-        if(gui.userInput.left):  self.l = True
-        if(gui.userInput.right): self.r = True
-
-        if(self.u): 
+        if(ang.u): 
             direction = 'up'
             self.liveFrames = self.upF
-        if(self.d): 
+        if(ang.d): 
             direction = 'down'
             self.liveFrames = self.downF
-        if(self.l): 
+        if(ang.l): 
             direction = 'left'
             self.liveFrames = self.leftF
-        if(self.r): 
+        if(ang.r): 
             direction = 'right'
             self.liveFrames = self.rightF
 
@@ -63,14 +54,14 @@ class playerSprite():
 
 
 
-    def animate(self,gui,interval=0.2,stop=False):
+    def animate(self,gui,ang,interval=0.2,stop=False):
         """
         animages image every interval (in seconds)
         once image reaches end, it resets to first image
         """
 
         # Update direction Frames
-        direction = self.getDirection(gui)
+        direction = self.getDirection(ang)
 
 
         # --------change sprite templates
@@ -110,35 +101,73 @@ class playerObject():
     takes in playersprite classs from utils
     """
     def __init__(self,playerSprite,x,y,vx,vy):
-        self.sprite = playerSprite
-        self.x      = x
-        self.y      = y
-        self.vx     = vx
-        self.vy     = vy
+        self.sprite  = playerSprite
+        self.x       = x
+        self.y       = y
+        self.vx      = vx
+        self.vy      = vy
+        self.ballpos = []
+        self.facing  = 'u'
 
 
 
-    def dribble(self,colliding,fitba,gui,bounce=2):
+    def dribble(self,colliding,fitba,inRange,gui,bounce=1):
         if(colliding):
-            if(gui.userInput.kick):
-                print('kicking')
-            if(self.sprite.u): fitba.y -= bounce*self.vy
-            if(self.sprite.d): fitba.y += bounce*self.vy
-            
-            if(self.sprite.l):  
+            if(self.u): 
+                fitba.y -= bounce*self.vy
+            if(self.d): 
+                fitba.y += bounce*self.vy
+            if(self.l):  
                 fitba.x -= bounce*self.vx
-                fitba.y  = self.y + (0.6*self.sprite.h)
-            
-            if(self.sprite.r): 
+                fitba.y  = self.y + (0.6*self.sprite.h) # position ball
+            if(self.r): 
                 fitba.x += bounce*self.vx
-                fitba.y  = self.y + (0.6*self.sprite.h)
+                fitba.y  = self.y + (0.6*self.sprite.h) # position ball
+
+
+        if(gui.userInput.kick and inRange):
+            if(self.facing=='u'): fitba.kick  ='up'
+            if(self.facing=='d'): fitba.kick  ='down'
+            if(self.facing=='l'): fitba.kick  ='left'
+            if(self.facing=='r'): fitba.kick  ='right'
+
+    
+
+
+        
+
+    def inRange(self,playerPos,otherObj):
+        x,y,w,h = otherObj.x,otherObj.y,otherObj.w,otherObj.h
+        px,py,pw,ph = playerPos[0],playerPos[1],self.sprite.w,self.sprite.h
+        
+        playerRightside    = px+pw
+        playerLeftSide     = px-pw
+        playerBottomSide   = py+1.5*ph
+        playerTopSide      = py-0.5*ph
+        if x > playerLeftSide and x < playerRightside:
+            if y > playerTopSide and y < playerBottomSide:
+                return(True)
+        return(False)
 
     def collides(self,playerPos,otherObj):
         x,y,w,h = otherObj.x,otherObj.y,otherObj.w,otherObj.h
         px,py,pw,ph = playerPos[0],playerPos[1],self.sprite.w,self.sprite.h
+        
+        playerRightside    = px+0.5*pw
+        playerLeftSide     = px-0.5*pw
+        playerBottomSide   = py+ph
+        playerTopSide      = py
 
-        if x > px-(0.5*pw) and x < px + (0.5*pw):
-            if y > py and y < py + ph:
+        # get ball relative pos
+        self.ballpos = []
+        if(x>playerRightside): self.ballpos.append('l')
+        if(x<playerLeftSide):  self.ballpos.append('r')
+        if(y<playerTopSide):   self.ballpos.append('u')
+        if(y>playerTopSide):   self.ballpos.append('d')
+
+        # check if collides
+        if x > playerLeftSide and x < playerRightside:
+            if y > playerTopSide and y < playerBottomSide:
                 return(True)
         return(False)
     
@@ -147,30 +176,41 @@ class playerObject():
         #self.sprite.animate(gui,stop=True)
         stop = (gui.userInput.up==False and gui.userInput.down==False and gui.userInput.left==False and gui.userInput.right==False)
         
+        # Set Direction, set  velocity
         self.u,self.d,self.l,self.r = False,False,False,False
-        
-        if(gui.userInput.up):    self.u = True
-        if(gui.userInput.down):  self.d = True
-        if(gui.userInput.left):  self.l = True
-        if(gui.userInput.right): self.r = True
-        
         # Manage Velocity
-        if(gui.userInput.up):    self.y -= self.vy
-        if(gui.userInput.down):  self.y += self.vy
-        if(gui.userInput.left):  self.x -= self.vx
-        if(gui.userInput.right): self.x += self.vx
+        if(gui.userInput.up):    
+            self.y -= self.vy
+            self.u = True
+            self.facing = 'u'
+        if(gui.userInput.down):  
+            self.y += self.vy
+            self.d = True
+            self.facing = 'd'
+        if(gui.userInput.left):  
+            self.x -= self.vx
+            self.l = True
+            self.facing = 'l'
+        if(gui.userInput.right): 
+            self.x += self.vx
+            self.r = True
+            self.facing = 'r'
 
         # -------check if colliding
         colliding = self.collides((self.x,self.y),fitba)
+        inRange   = self.inRange((self.x,self.y),fitba)
         
         # ------ dribble ball
-        self.dribble(colliding,fitba,gui)
+        self.dribble(colliding,fitba,inRange,gui)
         
         # ------Animate
-        self.sprite.animate(gui,stop=stop)
+        self.sprite.animate(gui,self,stop=stop)
 
         # -------update position
         self.updateSprite(gui)
+
+        #
+        self.ballpos 
 
     def updateSprite(self,gui):
         self.sprite.x,self.sprite.y = self.x,self.y

@@ -107,7 +107,7 @@ while gui.running:
 
     player.play_selected(gui,fitba)
 
-    if(user_input.kick): print('Ball kicked')
+    #if(user_input.kick): print('Ball kicked')
 
 
         
